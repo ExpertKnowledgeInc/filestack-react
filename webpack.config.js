@@ -3,12 +3,12 @@ const webpack = require('webpack');
 const fs = require('fs');
 const rules = require('./webpack.loaders');
 
-module.exports = [{
-  entry: './src/ReactFilestack',
+module.exports = {
+  entry: './src/index.js',
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'filestack-react.js',
-    libraryTarget: 'commonjs2',
+    libraryTarget: 'umd',
   },
   devtool: 'source-map',
   resolve: {
@@ -16,6 +16,9 @@ module.exports = [{
     extensions: ['.js', '.json', '.jsx'],
   },
   module: { rules },
+  externals: [
+    'react', 'filestack-js', 'prop-types'
+  ],
   plugins: [
     new webpack.LoaderOptionsPlugin({
       minimize: true,
@@ -30,30 +33,4 @@ module.exports = [{
       },
     }),
   ],
-}, {
-  entry: './examples/demo/demo.jsx',
-  output: {
-    path: path.join(__dirname, 'examples/demo/dist'),
-    filename: 'demo.js'
-  },
-  devtool: 'source-map',
-  resolve: {
-    modules: ['node_modules', 'examples/demo'],
-    extensions: ['.json', '.js', '.jsx'],
-  },
-  module: { rules },
-  plugins: [
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-    }),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production'),
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false,
-      },
-    }),
-  ],
-}];
+};
